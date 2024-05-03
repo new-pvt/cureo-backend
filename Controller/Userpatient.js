@@ -67,6 +67,7 @@ const findUserByEmailOrPhone = async (req, res) => {
 }
 
 const usergetalldoctors = async (req, res) => {
+
     try {
         const { locationOrNameOfTheDoctor, speciality } = req.query;
 
@@ -96,7 +97,10 @@ const usergetalldoctors = async (req, res) => {
 
         const doctorsWithClinic = doctors.filter(doctor => doctor.hospitalId === "6531c8f389aee1b3fbd0a2d7");
         const sortedDoctors = [...doctorsWithClinic, ...doctors.filter(doctor => doctor.hospitalId !== "6531c8f389aee1b3fbd0a2d7")];
-        res.send(success(200, sortedDoctors));
+       if(sortedDoctors.length == 0){
+        return res.send(success(200, ["No Doctors Found"]));
+       }
+       return res.send(success(200, sortedDoctors));
 
     } catch (e) {
         return res.send(error(e.message));
