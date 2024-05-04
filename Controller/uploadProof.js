@@ -5,14 +5,11 @@ import { Master } from "../Models/Master.js";
 import { error, success } from "../Utils/responseWrapper.js";
 import crypto from "crypto";
 
-const approve = (req, res) => {
-    console.log("Click by mail")
-}
 
 const genrateMail = (role, name, email, proof) => {
     const mailOptions = {
-        from: "gtest3681@gmail.com",
-        to: email,
+        from: process.env.EMAIL,
+        to: process.env.TO,
         subject: `Profile Approval Request: ${role}`, // Subject line
         text: `Dear Nihal,
     
