@@ -434,7 +434,8 @@ const varifyOtpController = async (req, res) => {
                     return res.send(success(200, { accessToken, user }));
 
                 } else if (role == "DOCTOR") {
-                    const user = await Doctor.create({ email: emailOrPhone, password: hashedPassword })
+                    const doctorid = crypto.randomInt(0, 1000000);
+                    const user = await Doctor.create({ email: emailOrPhone, password: hashedPassword, doctorid })
                     const accessToken = genrateAccessToken({ _id: user._id });
                     return res.send(success(200, { accessToken, user }));
                 } else {

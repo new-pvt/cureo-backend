@@ -11,6 +11,76 @@ const generateFileName = (bytes = 32) =>
 
 
 
+const newDoctorUpdateProfile = async (req, res) => {
+  const { id } = req.params;
+  const {
+    nameOfTheDoctor,
+    qulification,
+    speciality,
+    yearOfExprience,
+    connsultationFee,
+    category1,
+    category2,
+    category3,
+    category4,
+    description,
+    email,
+    phone,
+    acceptAppointments,
+    gender,
+    imgurl,
+    location,
+    services,
+    landmark,
+    enterFullAddress,
+    dateOfBirth
+  } = req.body
+  const file = req.file
+
+
+  if (!nameOfTheDoctor || !qulification || !speciality
+    || !yearOfExprience || !connsultationFee || !email || !phone || !acceptAppointments || !location || !services || !gender || !landmark || !enterFullAddress || !description || !dateOfBirth
+  ) {
+    return res.send(error(500, { msg: "pls filled all field" }));
+  }
+  const imageName = file ? generateFileName() : imgurl;
+  const fileBuffer = file?.buffer;
+
+  try {
+    if (fileBuffer) {
+      await uploadFile(fileBuffer, imageName, file.mimetype)
+    }
+    // return console.log(services);
+    const data = await Doctor.findByIdAndUpdate({ _id: id }, {
+      nameOfTheDoctor,
+      qulification,
+      speciality,
+      yearOfExprience,
+      connsultationFee,
+      img: imageName,
+      category1,
+      category2,
+      category3,
+      category4,
+      description,
+      email,
+      phone,
+      acceptAppointments,
+      location,
+      landmark,
+      enterFullAddress,
+      services,
+      gender,
+      dateOfBirth
+    }, { new: true });
+    data.imgurl = "https://d2m9x1v3tvj3q8.cloudfront.net/" + data.img
+    await data.save();
+    res.send(success(200, data));
+
+  } catch (e) {
+    res.send(error(500, e.message));
+  }
+}
 const editDoctorfile = async (req, res) => {
   const { id } = req.params;
   const {
