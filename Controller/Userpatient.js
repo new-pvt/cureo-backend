@@ -97,10 +97,10 @@ const usergetalldoctors = async (req, res) => {
 
         const doctorsWithClinic = doctors.filter(doctor => doctor.hospitalId === "6531c8f389aee1b3fbd0a2d7");
         const sortedDoctors = [...doctorsWithClinic, ...doctors.filter(doctor => doctor.hospitalId !== "6531c8f389aee1b3fbd0a2d7")];
-       if(sortedDoctors.length == 0){
-        return res.send(success(200, ["No Doctors Found"]));
-       }
-       return res.send(success(200, sortedDoctors));
+        if (sortedDoctors.length == 0) {
+            return res.send(success(200, ["No Doctors Found"]));
+        }
+        return res.send(success(200, sortedDoctors));
 
     } catch (e) {
         return res.send(error(e.message));
@@ -225,10 +225,10 @@ const sendOtpToEmailOrPhone = async (req, res) => {
         const isotpalready = await Otp.findOne({ email: emailOrPhone })
 
         if (isotpalready) {
-            const updatedotp = await Otp.findOneAndUpdate({ email: emailOrPhone }, { email: emailOrPhone, otp: OTP })
+            const updatedotp = await Otp.findOneAndUpdate({ email: emailOrPhone }, { email: emailOrPhone, otp: OTP, phone: OTP + 1 })
         }
         else {
-            const newotp = await Otp.create({ email: emailOrPhone, otp: OTP })
+            const newotp = await Otp.create({ email: emailOrPhone, otp: OTP, phone: OTP + 1 })
         }
 
         transporter.sendMail(mailOptions, function (err, info) {
