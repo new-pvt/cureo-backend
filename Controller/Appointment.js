@@ -181,24 +181,30 @@ const appointmentstatus = async (req, res) => {
 const getsingleappointmentbyid = async (req, res) => {
     const { appointmentId, status } = req.params;
     if (!appointmentId) {
-        return res.send(error(400, "id is required"));
+      return res.send(error(400, "id is required"));
     }
     try {
-        const singleappointment = await AppointmentModel.findOne({ $and: [{ _id: appointmentId }, { status }] }).populate("doctorid")
-        const singleappointmentbytoken = await AppointmentTokenModel.findOne({ $and: [{ _id: appointmentId }, { status }] }).populate("doctorid")
-        if (singleappointment) {
-            return res.send(success(200, singleappointment));
-        }
-        else if (singleappointmentbytoken) {
-            return res.send(success(200, singleappointmentbytoken));
-        }
-        else {
-            return res.send(error(404, "not appointment found"))
-        }
+      let query = { _id: appointmentId };
+      if (status === 'missed' || status === 'cancelled') {
+        query.status = { $in: ['missed', 'cancelled'] };
+      } else {
+        query.status = status;
+      }
+      const singleappointment = await AppointmentModel.findOne(query).populate("doctorid")
+      const singleappointmentbytoken = await AppointmentTokenModel.findOne(query).populate("doctorid")
+      if (singleappointment) {
+        return res.send(success(200, singleappointment));
+      }
+      else if (singleappointmentbytoken) {
+        return res.send(success(200, singleappointmentbytoken));
+      }
+      else {
+        return res.send(error(404, "not appointment found"))
+      }
     } catch (e) {
-        return res.send(error(500, e.message));
+      return res.send(error(500, e.message));
     }
-}
+  }
 
 const changeappointmentstatus = async (req, res) => {
     const { id } = req.params;

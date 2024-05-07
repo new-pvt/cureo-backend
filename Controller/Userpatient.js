@@ -67,7 +67,6 @@ const findUserByEmailOrPhone = async (req, res) => {
 }
 
 const usergetalldoctors = async (req, res) => {
-
     try {
         const { locationOrNameOfTheDoctor, speciality } = req.query;
 
@@ -95,17 +94,26 @@ const usergetalldoctors = async (req, res) => {
             doctors = doctors.filter(doctor => doctor.speciality === speciality);
         }
 
-        const doctorsWithClinic = doctors.filter(doctor => doctor.hospitalId === "6531c8f389aee1b3fbd0a2d7");
-        const sortedDoctors = [...doctorsWithClinic, ...doctors.filter(doctor => doctor.hospitalId !== "6531c8f389aee1b3fbd0a2d7")];
-        if (sortedDoctors.length == 0) {
+        const prioritizedDoctorIds = ["65d6f17bc493ec74449e25ec", "65dc563fc493ec74449e2a80",]; // Replace with the _ids of the prioritized doctors
+        const prioritizedDoctors = doctors.filter(doctor => prioritizedDoctorIds.includes(doctor._id.toString()));
+        const remainingDoctors = doctors.filter(doctor => !prioritizedDoctorIds.includes(doctor._id.toString()));
+
+        // Move prioritized doctors to the beginning of the array
+        const sortedDoctors = [...prioritizedDoctors, ...remainingDoctors];
+
+        const doctorsWithClinic = sortedDoctors.filter(doctor => doctor.hospitalId === "6531c8f389aee1b3fbd0a2d7");
+        const finalSortedDoctors = [...doctorsWithClinic, ...sortedDoctors.filter(doctor => doctor.hospitalId !== "6531c8f389aee1b3fbd0a2d7")];
+        if (finalSortedDoctors.length == 0) {
             return res.send(success(200, ["No Doctors Found"]));
         }
-        return res.send(success(200, sortedDoctors));
+        return res.send(success(200, finalSortedDoctors));
 
     } catch (e) {
         return res.send(error(e.message));
     }
 }
+
+
 
 
 // const usergetalldoctors = async (req, res) => {

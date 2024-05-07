@@ -16,7 +16,7 @@ const MasterShema = new mongoose.Schema({
     role: { type: String, default: "PATIENT" },
     imgurl: {
         type: String,
-        default: "https://d2m9x1v3tvj3q8.cloudfront.net/67c30e16c91a42ff9f30f84959a0ce1be155b24d8bbe14583d51cbfcc430fdba"
+        default: "https://d2m9x1v3tvj3q8.cloudfront.net/1d7a0733c82b1cdf9f08e2424ea9ef95f070dc8ab773ff4fa55d7641eaf97956"
     },
     gender: { type: String },
     mapLink: {
