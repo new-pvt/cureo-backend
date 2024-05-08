@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 const MasterShema = new mongoose.Schema({
     email: {
         type: String,
-        unique: true,
         lowercase: true
     },
     password: {
@@ -12,7 +11,6 @@ const MasterShema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        unique: true,
     },
     nameOfhospitalOrClinic: { type: String },
     hospitalType: { type: String, },
@@ -42,8 +40,8 @@ const MasterShema = new mongoose.Schema({
         },
         proof: {
             type: String
-        }  
-    }   
+        }
+    }
     // verificationStatus: { type: String, default: "Not Applied Yet" },
     // proof: { type: String }
 

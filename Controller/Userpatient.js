@@ -16,6 +16,7 @@ import fast2sms from 'fast-two-sms'
 import axios from "axios";
 import Fuse from 'fuse.js'
 import nodemailer from 'nodemailer'
+import { EmailOtps } from "../Models/emailOtps.js";
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -230,24 +231,30 @@ const sendOtpToEmailOrPhone = async (req, res) => {
             `
         }
 
-        const isotpalready = await Otp.findOne({ email: emailOrPhone })
+        try {
+            const isotpalready = await EmailOtps.findOne({ email: emailOrPhone })
 
-        if (isotpalready) {
-            const updatedotp = await Otp.findOneAndUpdate({ email: emailOrPhone }, { email: emailOrPhone, otp: OTP, phone: OTP + 1 })
-        }
-        else {
-            const newotp = await Otp.create({ email: emailOrPhone, otp: OTP, phone: OTP + 1 })
+            if (isotpalready) {
+                isotpalready.otp = OTP;
+                await isotpalready.save();
+            } else {
+                await Otp.create({ email: emailOrPhone, otp: OTP });
+            }
+
+            transporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.send(error(403, "email not sended"))
+                }
+                else {
+                    return res.send(success(200, { message: ['SMS sent successfully.'] }))
+                }
+            })
+
+        } catch (e) {
+            return res.send(error(500, e.message))
         }
 
-        transporter.sendMail(mailOptions, function (err, info) {
-            if (err) {
-                console.log(err);
-                return res.send(error(403, "email not sended"))
-            }
-            else {
-                return res.send(success(200, { message: ['SMS sent successfully.'] }))
-            }
-        })
         // try {
 
         //     if (!email || !password) {
@@ -296,12 +303,12 @@ const sendOtpToEmailOrPhone = async (req, res) => {
             const isOtpExist = await Otp.findOne({ phone: emailOrPhone })
 
             if (isOtpExist) {
-                const updateOtp = await Otp.findByIdAndUpdate({ _id: isOtpExist._id }, { otp: OTP, email: OTP + 1 }, { new: true })
-                updateOtp.save();
+                isOtpExist.otp = OTP;
+                await isOtpExist.save();
                 return res.send(success(200, response.data));
             } else {
-                const saveOtpData = new Otp({ phone: emailOrPhone, otp: OTP, email: OTP + 1 });
-                await saveOtpData.save();
+                await Otp.create({ phone: emailOrPhone, otp: OTP })
+
                 return res.send(success(200, response.data));
 
             }
@@ -309,7 +316,6 @@ const sendOtpToEmailOrPhone = async (req, res) => {
 
 
         } catch (e) {
-            // console.log(e)
             return res.send(error(500, e.message));
         }
     }

@@ -1,10 +1,5 @@
 import mongoose from 'mongoose'
 const otpSchema = mongoose.Schema({
-    email: {
-        type: String,
-        unique: true,
-        lowercase: true
-    },
     otp: {
         type: Number,
 

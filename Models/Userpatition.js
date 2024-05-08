@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const MasterShema = new mongoose.Schema({
     name: { type: String },
-    email: { type: String, unique: true },
+    email: { type: String },
     dateOfBirth: { type: String },
     phone: { type: String },
     img: {
@@ -25,7 +25,7 @@ const MasterShema = new mongoose.Schema({
     bloodgroup: {
         type: String,
     },
-    Healthconcern:[{ type: String }],
+    Healthconcern: [{ type: String }],
     medicalRecord: [{ type: mongoose.Schema.Types.ObjectId, ref: 'MedicalRecord' }]
 
 
