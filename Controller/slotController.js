@@ -109,9 +109,8 @@ const userslot = async (req, res) => {
 
                 slots1 = genrateSlots(starthour, endhour, slotDuration)
                 const alreadyslotsbooked = await AppointmentModel.find({ $and: [{ doctorid: doctorid }, { appointmentDate: newdate }, { status: "pending" }] })
-                console.log("alreadyslotsbooked", alreadyslotsbooked)
+  
                 const appointmentTimes = extractAppointmentTimes(alreadyslotsbooked);
-                console.log("appointmentTimes", appointmentTimes)
                 availableSlots = slots1.map(slot => { return { slot: slot, isbooked: appointmentTimes.includes(`${slot.startTime} - ${slot.endTime}`) }; })
             }
 
@@ -160,7 +159,6 @@ const userslot = async (req, res) => {
             }
 
             const comparray = [...availableSlots, ...availableSlots2, ...availableSlots3];
-            console.log(comparray)
             return res.send(success(200, comparray));
         }
         else {

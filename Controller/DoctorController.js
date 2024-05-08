@@ -234,7 +234,7 @@ const getAllDoctorWithAllQuery = async (req, res) => {
     const doctors = await Doctor.find();
     return res.send(success(200, doctors));
   }
-  console.log("This is speciality", speciality)
+
   // const nameOfTheDoctor = req.query.nameOfTheDoctor || ""
   // const speciality = req.query.speciality || ""
   // const location = req.query.location || ""
