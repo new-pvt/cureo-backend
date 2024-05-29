@@ -238,7 +238,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
                 isotpalready.otp = OTP;
                 await isotpalready.save();
             } else {
-                await Otp.create({ email: emailOrPhone, otp: OTP });
+                await EmailOtps.create({ email: emailOrPhone, otp: OTP });
             }
 
             transporter.sendMail(mailOptions, function (err, info) {
