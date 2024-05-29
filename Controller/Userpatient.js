@@ -330,7 +330,7 @@ const varifyOtpForForgotPasswordController = async (req, res) => {
 
     if (isNaN(emailOrPhone)) {
         try {
-            const otpverification = await Otp.findOne({ email: emailOrPhone });
+            const otpverification = await EmailOtps.findOne({ email: emailOrPhone });
 
             if (otpverification.otp == otp) {
                 return res.send(success(200, "OTP Verified"))
@@ -438,7 +438,7 @@ const varifyOtpController = async (req, res) => {
 
     if (isNaN(emailOrPhone)) {
         try {
-            const otpverification = await Otp.findOne({ email: emailOrPhone });
+            const otpverification = await EmailOtps.findOne({ email: emailOrPhone });
 
             if (otpverification.otp == otp) {
                 const hashedPassword = await bcrypt.hash(password, 10)
