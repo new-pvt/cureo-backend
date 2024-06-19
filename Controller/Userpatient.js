@@ -212,7 +212,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
     if (isNaN(emailOrPhone)) {
 
         const mailOptions = {
-            from: "gtest3681@gmail.com",
+            from: "CureO",
             to: emailOrPhone,
             subject: "Medidek OTP VERIFY",
             html:
@@ -244,7 +244,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
             transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                     console.log(err);
-                    return res.send(error(403, "email not sended"))
+                    return res.send(error(403, err.message))
                 }
                 else {
                     return res.send(success(200, { message: ['SMS sent successfully.'] }))
@@ -284,6 +284,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
 
         // }
     } else {
+        console.log("starting tk aa raha hai ye")
 
         try {
 
@@ -299,7 +300,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
                     Authorization: process.env.OTP_KEY
                 }
             })
-
+            console.log("yaha tk aa raha hai ye")
             const isOtpExist = await Otp.findOne({ phone: emailOrPhone })
 
             if (isOtpExist) {
@@ -316,6 +317,7 @@ const sendOtpToEmailOrPhone = async (req, res) => {
 
 
         } catch (e) {
+            console.log(e)
             return res.send(error(500, e.message));
         }
     }
